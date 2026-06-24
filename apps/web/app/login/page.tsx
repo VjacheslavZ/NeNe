@@ -1,3 +1,4 @@
+"use client";
 import LoginForm from "@/components/auth/login-form";
 
 export default function SignupPage() {
@@ -18,7 +19,7 @@ export default function SignupPage() {
             </a>
           </p>
         </div>
-        <LoginForm />
+        <LoginForm onSubmit={async (data) => console.log(data)} />
       </div>
     </div>
   );
