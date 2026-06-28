@@ -14,11 +14,11 @@ import { DATABASE_CONNECTION } from './database-connection';
         const pool = new Pool({
           connectionString: configService.getOrThrow('DATABASE_URL'),
         });
-        console.log('pool', pool);
         return drizzle(pool);
       },
       inject: [ConfigService],
     },
   ],
+  exports: [DATABASE_CONNECTION],
 })
 export class DatabaseModule {}
