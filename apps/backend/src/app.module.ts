@@ -14,15 +14,15 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot(),
     DatabaseModule,
     AuthModule.forRootAsync({
-      imports: [DatabaseModule],
+      imports: [DatabaseModule, ConfigModule],
       useFactory: (db: NodePgDatabase, configService: ConfigService) => ({
         auth: betterAuth({
-          database: drizzleAdapter(db, {
-            provider: 'pg',
-          }),
+          database: drizzleAdapter(db, { provider: 'pg' }),
+          emailAndPassword: { enabled: true },
+          trustedOrigins: [configService.getOrThrow('UI_URL')],
         }),
       }),
-      inject: [DATABASE_CONNECTION],
+      inject: [DATABASE_CONNECTION, ConfigService],
     }),
   ],
   controllers: [AppController],
