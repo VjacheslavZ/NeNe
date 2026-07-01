@@ -1,15 +1,26 @@
 "use client";
+import { useRouter } from "next/navigation";
+
 import SignupForm from "@/components/auth/signup-form";
 import { SignupFormData } from "@/lib/auth/schema";
 import { authClient } from "@/lib/auth/client";
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const handleSignup = async (data: SignupFormData) => {
     await authClient.signUp.email({
       name: data.name,
       email: data.email,
       password: data.password,
     });
+
+    await authClient.signIn.email({
+      email: data.email,
+      password: data.password,
+    });
+
+    router.push("/");
   };
 
   return (

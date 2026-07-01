@@ -2,13 +2,26 @@
 import LoginForm from "@/components/auth/login-form";
 import { LoginFormData } from "@/lib/auth/schema";
 import { authClient } from "@/lib/auth/client";
+import { useRouter } from "next/navigation";
+import { UseFormSetError } from "react-hook-form";
 
 export default function SignupPage() {
-  const handleLogin = async (data: LoginFormData) => {
-    await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-    });
+  const router = useRouter();
+
+  const handleLogin = async (
+    data: LoginFormData,
+    setError: UseFormSetError<LoginFormData>,
+  ) => {
+    const { error } = await authClient.signIn.email(data);
+
+    if (error) {
+      setError("password", { message: error.message });
+      setError("email", { message: error.message });
+
+      return;
+    }
+
+    router.push("/");
   };
 
   return (

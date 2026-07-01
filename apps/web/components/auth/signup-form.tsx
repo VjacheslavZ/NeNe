@@ -1,6 +1,5 @@
 "use client";
-import { useState } from "react";
-import { Controller, useForm, UseFormSetError } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Card,
   CardHeader,
@@ -25,8 +24,6 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ onSubmit }: SignupFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -36,18 +33,6 @@ export default function SignupForm({ onSubmit }: SignupFormProps) {
       confirmPassword: "",
     },
   });
-
-  const handleSubmit = async (data: SignupFormData) => {
-    setIsSubmitting(true);
-
-    try {
-      await onSubmit(data);
-    } catch (error) {
-      console.error("Signup error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <Card className="w-full max-w-md mx-auto">

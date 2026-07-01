@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { LoginFormData, loginSchema } from "@/lib/auth/schema";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, UseFormSetError } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -21,7 +21,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface LoginFormsProps {
-  onSubmit: (data: LoginFormData) => Promise<void>;
+  onSubmit: (
+    data: LoginFormData,
+    setError: UseFormSetError<LoginFormData>,
+  ) => Promise<void>;
 }
 
 export default function LoginForm({ onSubmit }: LoginFormsProps) {
@@ -35,18 +38,6 @@ export default function LoginForm({ onSubmit }: LoginFormsProps) {
     },
   });
 
-  const handleSubmit = async (data: LoginFormData) => {
-    setIsSubmitting(true);
-
-    try {
-      await onSubmit(data);
-    } catch (error) {
-      console.error("Loggin error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
@@ -58,7 +49,7 @@ export default function LoginForm({ onSubmit }: LoginFormsProps) {
       <CardContent>
         <form
           id="form-sign-in"
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit((args) => onSubmit(args, form.setError))}
           className="space-y-4"
         >
           <FieldGroup>
