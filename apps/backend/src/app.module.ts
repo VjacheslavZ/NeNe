@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { DATABASE_CONNECTION } from './database/database-connection';
 import { AppController } from './app.controller';
 import { PostsModule } from './posts/posts.module';
+import { UsersModule } from './auth/users/users.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PostsModule } from './posts/posts.module';
       inject: [DATABASE_CONNECTION, ConfigService],
     }),
     PostsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

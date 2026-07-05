@@ -1,10 +1,73 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { desc } from 'drizzle-orm';
 
-import { CreatePostInput } from './schemas/trpc.schema';
+import { CreatePostInput, Post } from './schemas/trpc.schema';
+import { DATABASE_CONNECTION } from '../database/database-connection';
+import { schema } from '../database/database.module';
+import { post } from './schemas/schema';
+import { UsersService } from '../auth/users/users.service';
 
 @Injectable()
 export class PostsService {
-  async create(createPostInput: CreatePostInput) {}
+  constructor(
+    @Inject(DATABASE_CONNECTION)
+    private readonly database: NodePgDatabase<typeof schema>,
+    private readonly usersService: UsersService,
+  ) {}
 
-  async findAll() {}
+  private async formatPostResponse(
+    savedPost: typeof post.$inferSelect,
+    userId: string,
+  ): Promise<Post> {
+    const userInfo = await this.usersService.findById(userId);
+
+    return {
+      id: savedPost.id,
+      user: {
+        username: userInfo.name,
+        avatar: '',
+      },
+      image: savedPost.image,
+      caption: savedPost.caption,
+      likes: savedPost.likes,
+      timestamp: savedPost.createdAt.toISOString(),
+      comments: 0,
+    };
+  }
+
+  async create(createPostInput: CreatePostInput, userId: string) {
+    const [newPost] = await this.database
+      .insert(post)
+      .values({
+        userId,
+        caption: createPostInput.caption,
+        image: '',
+        likes: 0,
+        createdAt: new Date(),
+      })
+      .returning();
+
+    return this.formatPostResponse(newPost, userId);
+  }
+
+  async findAll(): Promise<Post[]> {
+    const posts = await this.database.query.post.findMany({
+      with: { user: true },
+      orderBy: [desc(post.createdAt)],
+    });
+
+    return posts.map((post) => ({
+      id: post.id,
+      user: {
+        username: post.user.name,
+        avatar: '',
+      },
+      image: post.image,
+      caption: post.caption,
+      likes: post.likes,
+      timestamp: post.createdAt.toISOString(),
+      comments: 0,
+    }));
+  }
 }
