@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
 import { AuthGuard, AuthModule } from '@mguay/nestjs-better-auth';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { betterAuth } from 'better-auth';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { DATABASE_CONNECTION } from './database/database-connection';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+
+import { DatabaseModule } from './database/database.module';
+import { DATABASE_CONNECTION } from './database/database-connection';
 import { AppController } from './app.controller';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { AppController } from './app.controller';
       }),
       inject: [DATABASE_CONNECTION, ConfigService],
     }),
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [
