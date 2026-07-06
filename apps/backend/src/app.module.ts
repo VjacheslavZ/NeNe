@@ -18,7 +18,10 @@ import { UploadModule } from './upload/upload.module';
   imports: [
     ConfigModule.forRoot(),
     DatabaseModule,
-    TRPCModule.forRoot({ autoSchemaFile: '../../packages/trpc/src/server' }),
+    TRPCModule.forRoot({
+      basePath: '/api/trpc',
+      autoSchemaFile: '../../packages/trpc/src/server',
+    }),
     AuthModule.forRootAsync({
       imports: [DatabaseModule, ConfigModule],
       useFactory: (db: NodePgDatabase, configService: ConfigService) => ({
