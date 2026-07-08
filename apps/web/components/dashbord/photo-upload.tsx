@@ -1,9 +1,10 @@
 'use client';
 
-import { Image as ImageIcon, Upload, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
+import { FileUploadAria } from '@/components/file-upload-are';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,7 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface PhotoUploadProps {
@@ -30,48 +30,19 @@ export function PhotoUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [caption, setCaption] = useState('');
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file);
+    const reader = new FileReader();
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
+    reader.onload = (e) => setPreview(e.target?.result as string);
 
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        setPreview(e.target?.result as string);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        setPreview(e.target?.result as string);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   };
 
   const clearSelection = () => {
     setSelectedFile(null);
     setPreview(null);
     setCaption('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const handleUpload = async () => {
@@ -96,30 +67,7 @@ export function PhotoUpload({
           <DialogTitle>Create new post</DialogTitle>
         </DialogHeader>
         {!preview ? (
-          <div
-            onClick={() => fileInputRef?.current?.click()}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer hover:border-muted-foreground/50 transition-colors"
-          >
-            <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-medium mb-2">Drag photos here</p>
-            <p className="text-sm text-muted-foreground">
-              or click to select from your computer
-            </p>
-            <Button variant="outline">
-              <ImageIcon className="h-4 w-4 mr-2" />
-              Select from your computer
-            </Button>
-
-            <Input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-          </div>
+          <FileUploadAria onFileSelect={handleFileSelect} />
         ) : (
           <div className="space-y-4">
             <div className="relative">
