@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
 import { AuthGuard, AuthModule } from '@mguay/nestjs-better-auth';
-import { betterAuth } from 'better-auth';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { TRPCModule } from 'nestjs-trpc';
 
-import { DatabaseModule } from './database/database.module';
-import { DATABASE_CONNECTION } from './database/database-connection';
 import { AppController } from './app.controller';
-import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './auth/users/users.module';
+import { DATABASE_CONNECTION } from './database/database-connection';
+import { DatabaseModule } from './database/database.module';
+import { PostsModule } from './posts/posts.module';
 import { UploadModule } from './upload/upload.module';
 
 @Module({

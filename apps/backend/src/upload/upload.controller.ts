@@ -5,11 +5,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadService } from './upload.service';
+
 import {
   FileSizeValidationPipe,
   FileTypeValidationPipe,
 } from './file-validation.pipe';
+import { UploadService } from './upload.service';
 
 @Controller('upload')
 export class UploadController {

@@ -1,8 +1,10 @@
-"use client";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import { Heart, MessageCircle, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+'use client';
+
+import { Heart, MessageCircle, User } from 'lucide-react';
+import Image from 'next/image';
+
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface Post {
   id: number;
@@ -25,7 +27,7 @@ export default function Feed({ posts }: FeedProps) {
   const getImageUrl = (imagePath: string) => `/uploads/images/${imagePath}`;
 
   const getAvatarUrl = (avatarPath: string) => {
-    if (!avatarPath) return "";
+    if (!avatarPath) return '';
     return `/uploads/images/${avatarPath}`;
   };
 

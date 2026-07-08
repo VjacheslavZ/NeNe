@@ -1,9 +1,10 @@
-"use client";
-import { useRouter } from "next/navigation";
+'use client';
 
-import SignupForm from "@/components/auth/signup-form";
-import { SignupFormData } from "@/lib/auth/schema";
-import { authClient } from "@/lib/auth/client";
+import { useRouter } from 'next/navigation';
+
+import SignupForm from '@/components/auth/signup-form';
+import { authClient } from '@/lib/auth/client';
+import { SignupFormData } from '@/lib/auth/schema';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function SignupPage() {
       password: data.password,
     });
 
-    router.push("/");
+    router.push('/');
   };
 
   return (
@@ -31,7 +32,7 @@ export default function SignupPage() {
             Create your account
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <a
               href="/login"
               className="font-medium text-primary hover:text-primary/90"

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { desc } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import { CreatePostInput, Post } from './schemas/trpc.schema';
+import { UsersService } from '../auth/users/users.service';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import { schema } from '../database/database.module';
 import { post } from './schemas/schema';
-import { UsersService } from '../auth/users/users.service';
+import { CreatePostInput, Post } from './schemas/trpc.schema';
 
 @Injectable()
 export class PostsService {

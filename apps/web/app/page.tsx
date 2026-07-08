@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
 
-import { Stories } from "@/components/dashbord/stories";
-import Feed from "@/components/dashbord/feed";
-import Sidebar from "@/components/dashbord/sidebar";
-import { PhotoUpload } from "@/components/dashbord/photo-upload";
-import { Button } from "@/components/ui/button";
-import { trpc } from "@/lib/trpc/client";
+import Feed from '@/components/dashbord/feed';
+import { PhotoUpload } from '@/components/dashbord/photo-upload';
+import Sidebar from '@/components/dashbord/sidebar';
+import { Stories } from '@/components/dashbord/stories';
+import { Button } from '@/components/ui/button';
+import { trpc } from '@/lib/trpc/client';
 
 export default function Home() {
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -22,15 +22,15 @@ export default function Home() {
 
   const handleCreatePost = async (file: File, caption: string) => {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
 
-    const uploadResponse = await fetch("/api/upload/image", {
-      method: "POST",
+    const uploadResponse = await fetch('/api/upload/image', {
+      method: 'POST',
       body: formData,
     });
 
     if (!uploadResponse.ok) {
-      throw new Error("Failed to upload image");
+      throw new Error('Failed to upload image');
     }
 
     const { filename } = await uploadResponse.json();

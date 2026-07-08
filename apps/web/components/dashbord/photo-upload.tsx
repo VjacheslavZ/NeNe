@@ -1,18 +1,19 @@
-"use client";
-import { useRef, useState } from "react";
-import { Upload, Image as ImageIcon, X } from "lucide-react";
-import Image from "next/image";
+'use client';
 
+import { Image as ImageIcon, Upload, X } from 'lucide-react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface PhotoUploadProps {
   open: boolean;
@@ -27,7 +28,7 @@ export function PhotoUpload({
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [caption, setCaption] = useState("");
+  const [caption, setCaption] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -38,7 +39,7 @@ export function PhotoUpload({
     e.preventDefault();
 
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
       const reader = new FileReader();
 
@@ -52,7 +53,7 @@ export function PhotoUpload({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
       const reader = new FileReader();
 
@@ -67,9 +68,9 @@ export function PhotoUpload({
   const clearSelection = () => {
     setSelectedFile(null);
     setPreview(null);
-    setCaption("");
+    setCaption('');
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
@@ -82,7 +83,7 @@ export function PhotoUpload({
       clearSelection();
       onOpenChange(false);
     } catch (error) {
-      console.error("Error creating post:", error);
+      console.error('Error creating post:', error);
     } finally {
       setIsUploading(false);
     }

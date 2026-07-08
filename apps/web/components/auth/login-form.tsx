@@ -1,24 +1,26 @@
-"use client";
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { Controller, useForm, UseFormSetError } from 'react-hook-form';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { LoginFormData, loginSchema } from "@/lib/auth/schema";
-import { Controller, useForm, UseFormSetError } from "react-hook-form";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@/components/ui/card';
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { LoginFormData, loginSchema } from '@/lib/auth/schema';
 
 interface LoginFormsProps {
   onSubmit: (
@@ -33,8 +35,8 @@ export default function LoginForm({ onSubmit }: LoginFormsProps) {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 

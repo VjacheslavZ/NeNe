@@ -1,9 +1,11 @@
-"use client";
-import LoginForm from "@/components/auth/login-form";
-import { LoginFormData } from "@/lib/auth/schema";
-import { authClient } from "@/lib/auth/client";
-import { useRouter } from "next/navigation";
-import { UseFormSetError } from "react-hook-form";
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { UseFormSetError } from 'react-hook-form';
+
+import LoginForm from '@/components/auth/login-form';
+import { authClient } from '@/lib/auth/client';
+import { LoginFormData } from '@/lib/auth/schema';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,13 +17,13 @@ export default function SignupPage() {
     const { error } = await authClient.signIn.email(data);
 
     if (error) {
-      setError("password", { message: error.message });
-      setError("email", { message: error.message });
+      setError('password', { message: error.message });
+      setError('email', { message: error.message });
 
       return;
     }
 
-    router.push("/");
+    router.push('/');
   };
 
   return (
@@ -32,7 +34,7 @@ export default function SignupPage() {
             Sign into your account
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Do not have an account?{" "}
+            Do not have an account?{' '}
             <a
               href="/signup"
               className="font-medium text-primary hover:text-primary/90"

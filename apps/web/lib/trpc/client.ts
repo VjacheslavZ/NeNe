@@ -1,10 +1,10 @@
-import { AppRouter } from "@repo/trpc/router";
+import { AppRouter } from '@repo/trpc/router';
+import { QueryClient } from '@tanstack/react-query';
 import {
   createTRPCReact,
   CreateTRPCReact,
   httpBatchLink,
-} from "@trpc/react-query";
-import { QueryClient } from "@tanstack/react-query";
+} from '@trpc/react-query';
 
 export const trpc: CreateTRPCReact<AppRouter, object> = createTRPCReact<
   AppRouter,
@@ -14,5 +14,5 @@ export const trpc: CreateTRPCReact<AppRouter, object> = createTRPCReact<
 export const queryClient = new QueryClient();
 
 export const trpcClient = trpc.createClient({
-  links: [httpBatchLink({ url: "/api/trpc" })],
+  links: [httpBatchLink({ url: '/api/trpc' })],
 });

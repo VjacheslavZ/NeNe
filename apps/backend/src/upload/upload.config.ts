@@ -1,9 +1,10 @@
-import { Request } from 'express';
 import { extname } from 'path';
-import { v4 as uuid4 } from 'uuid';
-import { diskStorage } from 'multer';
+
 import { BadRequestException } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { Request } from 'express';
+import { diskStorage } from 'multer';
+import { v4 as uuid4 } from 'uuid';
 
 export const editFileName = (
   request: Request,

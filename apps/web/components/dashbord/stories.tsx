@@ -1,5 +1,6 @@
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
+import Image from 'next/image';
+
+import { Card } from '@/components/ui/card';
 
 interface Story {
   id: string;
@@ -9,34 +10,34 @@ interface Story {
 
 const mockStories: Story[] = [
   {
-    id: "0",
-    username: "Your Story",
+    id: '0',
+    username: 'Your Story',
     avatar:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face",
+      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face',
   },
   {
-    id: "1",
-    username: "john doe",
+    id: '1',
+    username: 'john doe',
     avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face',
   },
   {
-    id: "2",
-    username: "jane doe",
+    id: '2',
+    username: 'jane doe',
     avatar:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=608h=6Q/fit=crop&crop=faces",
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=608h=6Q/fit=crop&crop=faces',
   },
   {
-    id: "3",
-    username: "photographer",
+    id: '3',
+    username: 'photographer',
     avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face',
   },
   {
-    id: "4",
-    username: "traveler",
+    id: '4',
+    username: 'traveler',
     avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face",
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face',
   },
 ];
 

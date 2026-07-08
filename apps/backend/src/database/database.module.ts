@@ -5,7 +5,6 @@ import { Pool } from 'pg';
 
 import * as authSchema from '../auth/schema';
 import * as postSchema from '../posts/schemas/schema';
-
 import { DATABASE_CONNECTION } from './database-connection';
 
 export const schema = { ...authSchema, ...postSchema };

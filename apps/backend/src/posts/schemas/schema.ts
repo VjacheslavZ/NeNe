@@ -1,5 +1,5 @@
-import { timestamp, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { user } from '../../auth/schema';
 

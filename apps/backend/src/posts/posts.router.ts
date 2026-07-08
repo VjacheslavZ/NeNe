@@ -1,12 +1,12 @@
-import { Input, Mutation, Router, Query } from 'nestjs-trpc';
+import { Input, Mutation, Query, Router } from 'nestjs-trpc';
 import { z } from 'zod';
 
+import { PostsService } from './posts.service';
 import {
   CreatePostInput,
   createPostSchema,
   postSchema,
 } from './schemas/trpc.schema';
-import { PostsService } from './posts.service';
 
 @Router()
 export class PostsRouter {
