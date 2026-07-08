@@ -1,11 +1,11 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Post {
-  id: string;
+  id: number;
   user: {
     username: string;
     avatar: string;
@@ -17,66 +17,39 @@ interface Post {
   timestamp: string;
 }
 
-const mockPosts: Post[] = [
-  {
-    id: "1",
-    user: {
-      username: "johndoe",
-      avatar:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face",
-    },
-    timestamp: "2 hours",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
-    caption: "Beautiful sunset at the beach likes: 142, comments: 8,",
-    comments: 8,
-    likes: 142,
-  },
-  {
-    id: "2",
-    user: {
-      username: "johndoe",
-      avatar:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=608h=6Q/fit=crop&crop=faces",
-    },
-    timestamp: "4 hours",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop",
-    caption: "Beautiful sunset at the beach likes: 142, comments: 8,",
-    comments: 23,
-    likes: 189,
-  },
-  {
-    id: "3",
-    user: {
-      username: "johndoe",
-      avatar:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face",
-    },
-    timestamp: "7 hours",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
-    caption: "Beautiful sunset at the beach likes: 142, comments: 8,",
-    comments: 22,
-    likes: 456,
-  },
-];
+interface FeedProps {
+  posts: Post[];
+}
 
-export default function Feed() {
+export default function Feed({ posts }: FeedProps) {
+  const getImageUrl = (imagePath: string) => `/uploads/images/${imagePath}`;
+
+  const getAvatarUrl = (avatarPath: string) => {
+    if (!avatarPath) return "";
+    return `/uploads/images/${avatarPath}`;
+  };
+
   return (
     <div className="space-y-6">
-      {mockPosts.map((post) => {
+      {posts.map((post) => {
         return (
           <Card key={post.id} className="overflow-hidden">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center space-x-3">
-                <Image
-                  src={post.user.avatar}
-                  alt={post.user.username}
-                  width={64}
-                  height={64}
-                  className="w-8 h-8 rounded-full "
-                />
+                {getAvatarUrl(post.user.avatar) ? (
+                  <Image
+                    src={getAvatarUrl(post.user.avatar)}
+                    alt={post.user.username}
+                    width={64}
+                    height={64}
+                    className="w-8 h-8 rounded-full "
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                    <User className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                )}
+
                 <span className="font-semibold text-sm">
                   {post.user.username}
                 </span>
@@ -84,11 +57,10 @@ export default function Feed() {
             </div>
             <div className="aspect-square relative">
               <Image
-                src={post.image}
+                src={getImageUrl(post.image)}
                 alt="post"
-                width={600}
-                height={600}
-                className="w-full h-full object-cover"
+                className="object-cover"
+                fill
               />
             </div>
 

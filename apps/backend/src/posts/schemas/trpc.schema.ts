@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createPostSchema = z.object({
   caption: z.string().min(1, 'Caption is required'),
+  image: z.string().min(1, 'Image must be a valid URL'),
 });
 
 export const postSchema = z.object({

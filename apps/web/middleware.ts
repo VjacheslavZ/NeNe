@@ -6,9 +6,7 @@ const publicRoutes = ["/login", "/signup"];
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (publicRoutes.includes(pathname)) {
-    return NextResponse.next();
-  }
+  if (publicRoutes.includes(pathname)) return NextResponse.next();
 
   const sessionCookie = getSessionCookie(request);
   if (!sessionCookie) {
@@ -19,5 +17,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api|uploads).*)"],
 };
