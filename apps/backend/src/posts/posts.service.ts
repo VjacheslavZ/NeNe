@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { desc } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { and, eq } from 'drizzle-orm/sql/expressions/conditions';
 
 import { UsersService } from '../auth/users/users.service';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import { schema } from '../database/database.module';
-import { post } from './schemas/schema';
+import { like, post } from './schemas/schema';
 import { CreatePostInput, Post } from './schemas/trpc.schema';
 
 @Injectable()
@@ -16,44 +17,30 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
-  private async formatPostResponse(
-    savedPost: typeof post.$inferSelect,
-    userId: string,
-  ): Promise<Post> {
-    const userInfo = await this.usersService.findById(userId);
+  async likePost(postId: number, userId: string) {
+    const existingLike = await this.database.query.like.findFirst({
+      where: and(eq(like.postId, postId), eq(like.userId, userId)),
+    });
 
-    return {
-      id: savedPost.id,
-      user: {
-        username: userInfo.name,
-        avatar: '',
-      },
-      image: savedPost.image,
-      caption: savedPost.caption,
-      likes: savedPost.likes,
-      timestamp: savedPost.createdAt.toISOString(),
-      comments: 0,
-    };
+    if (existingLike) {
+      await this.database.delete(like).where(eq(like.id, existingLike.id));
+    } else {
+      await this.database.insert(like).values({ postId, userId });
+    }
   }
 
   async create(createPostInput: CreatePostInput, userId: string) {
-    const [newPost] = await this.database
-      .insert(post)
-      .values({
-        userId,
-        caption: createPostInput.caption,
-        image: createPostInput.image,
-        likes: 0,
-        createdAt: new Date(),
-      })
-      .returning();
-
-    return this.formatPostResponse(newPost, userId);
+    await this.database.insert(post).values({
+      userId,
+      caption: createPostInput.caption,
+      image: createPostInput.image,
+      createdAt: new Date(),
+    });
   }
 
-  async findAll(): Promise<Post[]> {
+  async findAll(userId: string): Promise<Post[]> {
     const posts = await this.database.query.post.findMany({
-      with: { user: true },
+      with: { user: true, likes: true },
       orderBy: [desc(post.createdAt)],
     });
 
@@ -65,9 +52,10 @@ export class PostsService {
       },
       image: post.image,
       caption: post.caption,
-      likes: post.likes,
+      likes: post.likes.length,
       timestamp: post.createdAt.toISOString(),
       comments: 0,
+      isLiked: post.likes.some((like) => like.userId === userId),
     }));
   }
 }

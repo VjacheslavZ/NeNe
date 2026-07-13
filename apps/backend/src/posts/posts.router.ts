@@ -14,6 +14,8 @@ import { PostsService } from './posts.service';
 import {
   CreatePostInput,
   createPostSchema,
+  LikePostInput,
+  likePostSchema,
   postSchema,
 } from './schemas/trpc.schema';
 
@@ -22,7 +24,7 @@ import {
 export class PostsRouter {
   constructor(private readonly postsService: PostsService) {}
 
-  @Mutation({ input: createPostSchema, output: postSchema })
+  @Mutation({ input: createPostSchema })
   async create(
     @Input() createPostInput: CreatePostInput,
     @Ctx() context: AppContext,
@@ -31,7 +33,15 @@ export class PostsRouter {
   }
 
   @Query({ output: z.array(postSchema) })
-  async findAll() {
-    return this.postsService.findAll();
+  async findAll(@Ctx() context: AppContext) {
+    return this.postsService.findAll(context.user.id);
+  }
+
+  @Mutation({ input: likePostSchema })
+  async likePost(
+    @Input() likePostInput: LikePostInput,
+    @Ctx() context: AppContext,
+  ) {
+    return this.postsService.likePost(likePostInput.postId, context.user.id);
   }
 }
