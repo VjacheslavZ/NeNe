@@ -69,7 +69,7 @@ export function AvatarUpload({
           <DialogTitle>Update profile picture</DialogTitle>
         </DialogHeader>
         {!preview ? (
-          <div>
+          <div className="space-y-4">
             {currentAvatar && (
               <div className="flex justify-center">
                 <Image

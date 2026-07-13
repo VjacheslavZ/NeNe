@@ -38,7 +38,7 @@ export default function Feed({ posts }: FeedProps) {
                     alt={post.user.username}
                     width={64}
                     height={64}
-                    className="w-8 h-8 rounded-full "
+                    className="w-8 h-8 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">

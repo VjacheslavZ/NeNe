@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { authClient } from '@/lib/auth/client';
 import { getImageUrl } from '@/lib/image';
+import { trpc } from '@/lib/trpc/client';
 
 interface SuggestedUser {
   id: string;
@@ -62,12 +63,29 @@ export default function Sidebar() {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const router = useRouter();
 
+  const utils = trpc.useUtils();
+
   const handleLogout = async () => {
     await authClient.signOut();
     router.push('/login');
   };
 
-  const handleAvatarUpload = async (file: File) => {};
+  const handleAvatarUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const uploadResponse = await fetch('/api/upload/image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) throw new Error('Failed to upload avatar');
+
+    const { filename } = await uploadResponse.json();
+    await authClient.updateUser({ image: filename });
+
+    await utils.postsRouter.findAll.refetch();
+  };
 
   return (
     <div className="space-y-6">
@@ -77,7 +95,7 @@ export default function Sidebar() {
             {session?.user.image ? (
               <Image
                 src={getImageUrl(session?.user.image)}
-                className="w-14 h-14 rounded-full"
+                className="w-14 h-14 rounded-full object-cover"
                 alt="Your profile"
                 width={60}
                 height={60}
