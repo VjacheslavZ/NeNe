@@ -16,6 +16,24 @@ export default function Home() {
   const utils = trpc.useUtils();
   const posts = trpc.postsRouter.findAll.useQuery();
 
+  const likePost = trpc.postsRouter.likePost.useMutation({
+    onMutate: ({ postId }) => {
+      utils.postsRouter.findAll.setData(undefined, (old) => {
+        if (!old) return old;
+
+        return old.map((post) => {
+          if (post.id === postId) {
+            return {
+              ...post,
+              isLiked: !post.isLiked,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+            };
+          }
+          return post;
+        });
+      });
+    },
+  });
   const createPost = trpc.postsRouter.create.useMutation({
     onSuccess: () => utils.postsRouter.findAll.invalidate(),
   });
@@ -43,7 +61,10 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <Stories />
-            <Feed posts={posts.data || []} />
+            <Feed
+              posts={posts.data || []}
+              onLikePost={(postId) => likePost.mutate({ postId })}
+            />
           </div>
           <div className="lg:sticky lg:top-8 lg:h-fit">
             <Sidebar />
