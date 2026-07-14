@@ -87,3 +87,10 @@ Each feature is a self-contained Nest module under `src/`:
 
 - Backend: single quotes, trailing commas (`.prettierrc`); `@typescript-eslint/no-explicit-any` is disabled and `no-floating-promises`/`no-unsafe-argument` are warnings only, not errors.
 - New Drizzle tables must live in a file matching `src/**/schema.ts` so `drizzle-kit` (config in `drizzle.config.ts`) picks them up, and must be added to the merged `schema` export in `database/database.module.ts`.
+
+## Commit messages
+
+- Format: `<prefix>: <summary>`, e.g. `feat: add like button to post cards`.
+- Prefixes: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `style`, `perf`.
+- Summary line max 100 characters total (prefix included).
+- No body/footer unless explicitly requested.
