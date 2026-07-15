@@ -1,4 +1,11 @@
 import {
+  CreatePostInput,
+  createPostSchema,
+  LikePostInput,
+  likePostSchema,
+  postSchema,
+} from '@repo/trpc/schemas';
+import {
   Ctx,
   Input,
   Mutation,
@@ -11,13 +18,6 @@ import { z } from 'zod';
 import { AppContext } from '../app-context.interface';
 import { AuthTrpcMiddleware } from '../auth/auth-trpc.middleware';
 import { PostsService } from './posts.service';
-import {
-  CreatePostInput,
-  createPostSchema,
-  LikePostInput,
-  likePostSchema,
-  postSchema,
-} from './schemas/trpc.schema';
 
 @Router()
 @UseMiddlewares(AuthTrpcMiddleware)

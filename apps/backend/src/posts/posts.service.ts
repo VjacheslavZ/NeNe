@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { CreatePostInput, Post } from '@repo/trpc/schemas';
 import { desc } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { and, eq } from 'drizzle-orm/sql/expressions/conditions';
@@ -7,7 +8,6 @@ import { UsersService } from '../auth/users/users.service';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import { schema } from '../database/database.module';
 import { like, post } from './schemas/schema';
-import { CreatePostInput, Post } from './schemas/trpc.schema';
 
 @Injectable()
 export class PostsService {
