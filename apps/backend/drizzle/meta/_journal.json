@@ -29,6 +29,13 @@
       "when": 1783971530795,
       "tag": "0003_rich_hammerhead",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784114517346,
+      "tag": "0004_right_impossible_man",
+      "breakpoints": true
     }
   ]
 }
