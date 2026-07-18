@@ -1,10 +1,10 @@
 import { AuthService } from '@mguay/nestjs-better-auth';
-import { Injectable } from '@nestjs/common';
 import {
   MiddlewareOptions,
   MiddlewareResponse,
   TRPCMiddleware,
-} from 'nestjs-trpc';
+} from '@mguay/nestjs-trpc';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthTrpcMiddleware implements TRPCMiddleware {

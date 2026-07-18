@@ -1,18 +1,18 @@
 import {
-  CreatePostInput,
-  createPostSchema,
-  LikePostInput,
-  likePostSchema,
-  postSchema,
-} from '@repo/trpc/schemas';
-import {
   Ctx,
   Input,
   Mutation,
   Query,
   Router,
   UseMiddlewares,
-} from 'nestjs-trpc';
+} from '@mguay/nestjs-trpc';
+import {
+  CreatePostInput,
+  createPostSchema,
+  LikePostInput,
+  likePostSchema,
+  postSchema,
+} from '@repo/trpc/schemas';
 import { z } from 'zod';
 
 import { AppContext } from '../app-context.interface';
