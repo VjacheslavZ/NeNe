@@ -15,7 +15,8 @@ const appRouter = t.router({
     create: publicProcedure.input(createCommentSchema).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     findByPostId: publicProcedure.input(getCommentsSchema).output(z.array(commentSchema)).query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     delete: publicProcedure.input(deleteCommentSchema).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
-  })
+  }),
+  storiesRouter: t.router({})
 });
 export type AppRouter = typeof appRouter;
 

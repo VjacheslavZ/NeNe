@@ -36,6 +36,13 @@
       "when": 1784114517346,
       "tag": "0004_right_impossible_man",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1784457225664,
+      "tag": "0005_kind_shockwave",
+      "breakpoints": true
     }
   ]
 }

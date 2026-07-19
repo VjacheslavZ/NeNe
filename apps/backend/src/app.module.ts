@@ -16,6 +16,7 @@ import { DATABASE_CONNECTION } from './database/database-connection';
 import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
 import { UploadModule } from './upload/upload.module';
+import { StoriesModule } from './stories/stories.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UploadModule } from './upload/upload.module';
     UsersModule,
     UploadModule,
     CommentsModule,
+    StoriesModule,
   ],
   controllers: [AppController],
   providers: [
