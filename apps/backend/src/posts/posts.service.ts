@@ -40,7 +40,7 @@ export class PostsService {
 
   async findAll(userId: string): Promise<Post[]> {
     const posts = await this.database.query.post.findMany({
-      with: { user: true, likes: true },
+      with: { user: true, likes: true, comments: true },
       orderBy: [desc(post.createdAt)],
     });
 
@@ -54,7 +54,7 @@ export class PostsService {
       caption: post.caption,
       likes: post.likes.length,
       timestamp: post.createdAt.toISOString(),
-      comments: 0,
+      comments: post.comments.length,
       isLiked: post.likes.some((like) => like.userId === userId),
     }));
   }
