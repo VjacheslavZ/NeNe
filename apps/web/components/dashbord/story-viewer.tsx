@@ -154,7 +154,7 @@ export function StoryViewer({
               variant="ghost"
               size="icon"
               onClick={handlePrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white bg-black/50 hover:bg-black/70 transition-colors"
+              className="absolute left-4 top-1/2  z-20 text-white bg-black/50 hover:bg-black/70 transition-colors"
             >
               <ChevronLeftIcon className="w-6 h-6" />
             </Button>
@@ -163,7 +163,7 @@ export function StoryViewer({
             variant="ghost"
             size="icon"
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white bg-black/50 hover:bg-black/70 transition-colors"
+            className="absolute right-4 top-1/2  z-20 text-white bg-black/50 hover:bg-black/70 transition-colors"
           >
             <ChevronRightIcon className="w-6 h-6" />
           </Button>
