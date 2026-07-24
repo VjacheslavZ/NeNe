@@ -1,5 +1,12 @@
 import { relations } from 'drizzle-orm';
-import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  index,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 
 import { post } from '../posts/schemas/schema';
 
@@ -9,6 +16,9 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
   image: text('image'),
+  displayName: text('display_name'),
+  bio: text('bio'),
+  website: text('website'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -84,6 +94,32 @@ export const userRelations = relations(user, ({ many }) => ({
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, {
     fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const follow = pgTable(
+  'follow',
+  {
+    followerId: text('follower_id')
+      .notNull()
+      .references(() => user.id),
+    followingId: text('following_id')
+      .notNull()
+      .references(() => user.id),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.followerId, table.followingId] }),
+  }),
+);
+
+export const followRelations = relations(follow, ({ one }) => ({
+  follower: one(user, {
+    fields: [follow.followerId],
+    references: [user.id],
+  }),
+  following: one(user, {
+    fields: [follow.followingId],
     references: [user.id],
   }),
 }));
