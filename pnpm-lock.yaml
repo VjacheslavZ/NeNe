@@ -275,8 +275,8 @@ importers:
   packages/trpc:
     dependencies:
       '@trpc/server':
-        specifier: 11.5.0
-        version: 11.5.0(typescript@5.9.2)
+        specifier: 11.18.0
+        version: 11.18.0(typescript@5.9.2)
       zod:
         specifier: 4.1.3
         version: 4.1.3
@@ -2664,11 +2664,6 @@ packages:
   '@trpc/server@11.18.0':
     resolution: {integrity: sha512-JAvXOuNTxgXjIDfQaOvDq1j66LMNfDJUH1IU7Slfn8EvRv2EkH6ehu3A7zpYhjO0syHHiYg77v2lG2JFJgvw7Q==}
     hasBin: true
-    peerDependencies:
-      typescript: '>=5.7.2'
-
-  '@trpc/server@11.5.0':
-    resolution: {integrity: sha512-0IBtkmUCeO2ycn4K45/cqsujnlCQrSvkCo7lFDpg3kGMIPiLyLRciID5IiS7prEjRjeITa+od2aaHTIwONApVw==}
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -8727,10 +8722,6 @@ snapshots:
   '@trpc/server@10.45.4': {}
 
   '@trpc/server@11.18.0(typescript@5.9.2)':
-    dependencies:
-      typescript: 5.9.2
-
-  '@trpc/server@11.5.0(typescript@5.9.2)':
     dependencies:
       typescript: 5.9.2
 

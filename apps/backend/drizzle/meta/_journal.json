@@ -50,6 +50,13 @@
       "when": 1784886516545,
       "tag": "0006_harsh_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1784896026700,
+      "tag": "0007_heavy_luminals",
+      "breakpoints": true
     }
   ]
 }
