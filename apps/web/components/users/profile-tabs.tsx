@@ -32,7 +32,7 @@ export function ProfileTabs({
       </TabsList>
 
       <TabsContent value="posts" className="mt-6">
-        {userPosts.length > 0 ? (
+        {userPosts.length === 0 ? (
           <EmptyState
             icon={Grid}
             title="No posts Yet"
