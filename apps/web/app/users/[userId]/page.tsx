@@ -4,6 +4,7 @@ import { Post } from '@repo/trpc/schemas';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
+import PostModal from '@/components/users/post-modal';
 import { ProfileHeader } from '@/components/users/profile-header';
 import { ProfileNavigation } from '@/components/users/profile-navigation';
 import { ProfileTabs } from '@/components/users/profile-tabs';
@@ -14,6 +15,8 @@ export default function ProfilePage() {
   const userId = params.userId as string;
   const utils = trpc.useUtils();
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [followersFollowingModal, setFollowersFollowingModal] = useState<{
     open: boolean;
     type: 'followers' | 'following';
@@ -50,7 +53,10 @@ export default function ProfilePage() {
     }
   };
 
-  const handlePostClick = (post: Post) => {};
+  const handlePostClick = (post: Post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -98,6 +104,14 @@ export default function ProfilePage() {
           onPostClick={handlePostClick}
         />
       </div>
+
+      {selectedPost && (
+        <PostModal
+          post={selectedPost}
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+        />
+      )}
     </div>
   );
 }
