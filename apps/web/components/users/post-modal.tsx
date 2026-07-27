@@ -59,10 +59,10 @@ export default function PostModal({
             </div>
 
             <div className="flex-1 overflow-y-auto p-4">
-              <div className="flex space-x-3 bm-4">
+              <div className="flex space-x-3 mb-4">
                 <Button
                   variant="ghost"
-                  className="flex-srink-0 p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                  className="flex-shrink-0 p-0 h-auto hover:opacity-80 hover:bg-transparent"
                 >
                   {post.user.avatar ? (
                     <Image
@@ -74,7 +74,7 @@ export default function PostModal({
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                      <User className="w-54 h-4 text-muted-foreground" />
+                      <User className="w-4 h-4 text-muted-foreground" />
                     </div>
                   )}
                 </Button>
