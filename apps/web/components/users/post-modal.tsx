@@ -1,12 +1,16 @@
 'use client';
 
 import { Post } from '@repo/trpc/schemas';
-import { User } from 'lucide-react';
+import { Heart, Trash2, User } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth/client';
 import { getImageUrl } from '@/lib/image';
+import { trpc } from '@/lib/trpc/client';
 
 interface PostModalProps {
   post: Post;
@@ -15,10 +19,62 @@ interface PostModalProps {
 }
 
 export default function PostModal({
-  post,
+  post: initialPost,
   open,
   onOpenChange,
 }: PostModalProps) {
+  const [commentText, setCommentText] = useState('');
+
+  const utils = trpc.useUtils();
+
+  const { data: allPosts } = trpc.postsRouter.findAll.useQuery();
+  const post = allPosts?.find((p) => p.id === initialPost.id) || initialPost;
+  const { data: comments = [] } = trpc.commentsRouter.findByPostId.useQuery({
+    postId: post.id,
+  });
+
+  const { data: session } = authClient.useSession();
+  const deleteCommentMutation = trpc.commentsRouter.delete.useMutation({
+    onSuccess: () => {
+      utils.commentsRouter.findByPostId.invalidate({ postId: post.id });
+      utils.postsRouter.findAll.invalidate();
+    },
+  });
+
+  const handleDeleteComment = async (commentId: number) => {
+    await deleteCommentMutation.mutateAsync({ commentId });
+  };
+
+  const likePostMutation = trpc.postsRouter.likePost.useMutation({
+    onSuccess: () => {
+      utils.postsRouter.findAll.invalidate();
+      utils.usersRouter.getUserProfile.invalidate();
+    },
+  });
+
+  const handleLike = async () => {
+    await likePostMutation.mutateAsync({ postId: post.id });
+  };
+
+  const createCommentMutation = trpc.commentsRouter.create.useMutation({
+    onSuccess: (_, variables) => {
+      utils.commentsRouter.findByPostId.invalidate({
+        postId: variables.postId,
+      });
+      utils.postsRouter.findAll.invalidate();
+      setCommentText('');
+    },
+  });
+  const handleAddComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+
+    await createCommentMutation.mutateAsync({
+      postId: post.id,
+      text: commentText,
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl! w-full h-[90vh] p-0 overflow-hidden flex flex-col">
@@ -89,12 +145,109 @@ export default function PostModal({
                         {post.user.username}
                       </Button>
                       <span className="text-sm">{post.caption}</span>
-                      <div className="text-xs text-muted-foreground">
-                        {new Date(post.timestamp).toLocaleDateString()}
-                      </div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(post.timestamp).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="space-y-3 ">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="flex items-start space-x-2">
+                    <Button
+                      variant="ghost"
+                      className="shrink-0 p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                    >
+                      {getImageUrl(comment.user.avatar) ? (
+                        <Image
+                          src={getImageUrl(comment.user.avatar)}
+                          alt={comment.user.username}
+                          width={32}
+                          height={32}
+                          className="w-8 h-8 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                      )}
+                    </Button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <Button
+                            variant="ghost"
+                            className="font-semibold text-sm p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                          >
+                            {comment.user.username}
+                          </Button>
+                          <p className="text-sm wrap-break-words">
+                            {comment.text}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {new Date(comment.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {session?.user.id === comment.user.id && (
+                          <Button
+                            onClick={() => handleDeleteComment(comment.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 h-auto shrink-0 "
+                          >
+                            <Trash2 className="w-3 h-3 text-muted-foreground" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {comments.length === 0 && (
+                  <p>No comments yet, be the first to comment!</p>
+                )}
+              </div>
+            </div>
+
+            <div className="border-t p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLike}
+                    disabled={likePostMutation.isPending}
+                    className="p-0 h-auto"
+                  >
+                    <Heart
+                      className={`h-6 w-6 ${post.isLiked ? 'fill-red-500 text-red-500' : ''}`}
+                    />
+                  </Button>
+                </div>
+
+                <div className="font-semibold text-sm mb-3">
+                  {post.likes} Likes
+                </div>
+              </div>
+
+              <div className="border-t p-4">
+                <form
+                  onSubmit={handleAddComment}
+                  className="flex items-center space-x-2"
+                >
+                  <Input
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Add a comment..."
+                    className="flex-1"
+                  />
+
+                  <Button type="submit" disabled={!commentText.trim()}>
+                    Post
+                  </Button>
+                </form>
               </div>
             </div>
           </div>
