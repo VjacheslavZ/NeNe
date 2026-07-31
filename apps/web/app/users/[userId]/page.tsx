@@ -1,9 +1,10 @@
 'use client';
 
-import { Post } from '@repo/trpc/schemas';
+import { Post, UpdateProfileInput } from '@repo/trpc/schemas';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
+import { EditProfileModal } from '@/components/dashbord/edit-profile-modal';
 import PostModal from '@/components/users/post-modal';
 import { ProfileHeader } from '@/components/users/profile-header';
 import { ProfileNavigation } from '@/components/users/profile-navigation';
@@ -58,6 +59,16 @@ export default function ProfilePage() {
     setIsModalOpen(true);
   };
 
+  const updateProfileMutation = trpc.usersRouter.updateProfile.useMutation({
+    onSuccess: () => {
+      utils.usersRouter.getUserProfile.invalidate({ userId });
+    },
+  });
+
+  const handleSaveProfile = (data: UpdateProfileInput) => {
+    updateProfileMutation.mutate(data);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -80,7 +91,6 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background">
       <ProfileNavigation />
-
       <div className="max-w-4xl mx-auto px-4 py-8">
         <ProfileHeader
           profile={profile}
@@ -104,7 +114,6 @@ export default function ProfilePage() {
           onPostClick={handlePostClick}
         />
       </div>
-
       {selectedPost && (
         <PostModal
           post={selectedPost}
@@ -112,6 +121,13 @@ export default function ProfilePage() {
           onOpenChange={setIsModalOpen}
         />
       )}
+
+      <EditProfileModal
+        open={isEditProfileOpen}
+        onOpenChange={setIsEditProfileOpen}
+        profile={profile}
+        onSave={handleSaveProfile}
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
 } from '@mguay/nestjs-trpc';
 import {
   UpdateProfileInput,
+  updateProfileSchema,
   UserIdInput,
   userIdSchema,
   userProfileSchema,
@@ -49,7 +50,7 @@ export class UsersRouter {
     return this.usersService.getSuggestedUsers(context.user.id);
   }
 
-  @Mutation({ input: userProfileSchema })
+  @Mutation({ input: updateProfileSchema })
   async updateProfile(
     @Input() input: UpdateProfileInput,
     @Ctx() context: AppContext,
