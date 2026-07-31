@@ -20,46 +20,11 @@ interface SuggestedUser {
   followedBy: string;
 }
 
-const mockSuggestions: SuggestedUser[] = [
-  {
-    id: '1',
-    username: 'alexsmith',
-    avatar:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face',
-    followedBy: 'johndoe',
-  },
-  {
-    id: '2',
-    username: 'sarahwilson',
-    avatar:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face',
-    followedBy: 'janedoe',
-  },
-  {
-    id: '3',
-    username: 'mikejohnson',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
-    followedBy: 'photographer',
-  },
-  {
-    id: '4',
-    username: 'emilydavis',
-    avatar:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",',
-    followedBy: 'photographer',
-  },
-  {
-    id: '5',
-    username: 'davidbrown',
-    avatar:
-      'https://images.unsplash.com/photo-1463453091185-61582044d556?w=40&h=40&fit=crop&crop=face',
-    followedBy: 'traveler',
-  },
-];
-
 export default function Sidebar() {
   const router = useRouter();
+
+  const { data: suggestedUsers = [] } =
+    trpc.usersRouter.getSuggestedUsers.useQuery();
 
   const { data: session } = authClient.useSession();
   const [showAvatarModal, setShowAvatarModal] = useState(false);
@@ -87,6 +52,12 @@ export default function Sidebar() {
 
     await utils.postsRouter.findAll.refetch();
   };
+
+  const followMutation = trpc.usersRouter.follow.useMutation({
+    onSuccess: () => {
+      utils.usersRouter.getSuggestedUsers.invalidate();
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -156,35 +127,53 @@ export default function Sidebar() {
         </div>
 
         <div className="space-y-3">
-          {mockSuggestions.map((user) => {
-            return (
-              <div key={user.id} className="flex items-center space-x-3">
-                <Image
-                  src={user.avatar}
-                  alt={user.username}
-                  className="w-8 h-8 rounded-full"
-                  width={40}
-                  height={40}
-                />
-
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm">{user.username}</div>
-                  {user.followedBy && (
-                    <div className="text-xs text-muted-foreground">
-                      Followed by {user.followedBy}
+          {suggestedUsers.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No suggestions available
+            </p>
+          ) : (
+            suggestedUsers.map((user) => (
+              <div key={user.id} className="flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  onClick={() => router.push(`/users/${user.id}`)}
+                  className="flex items-center gap-3 h-auto p-0 hover:bg-transparent"
+                >
+                  {user.image ? (
+                    <Image
+                      src={getImageUrl(user.image)}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full object-cover"
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <User className="w-4 h-4 text-muted-foreground" />
                     </div>
                   )}
-                </div>
+                  <div className="min-w-0 text-left">
+                    <div className="font-semibold text-sm">{user.name}</div>
+                    {user.bio && (
+                      <div className="text-xs text-muted-foreground truncate">
+                        {user.bio}
+                      </div>
+                    )}
+                  </div>
+                </Button>
 
                 <Button
                   variant="ghost"
-                  className="text-primary hover:text-primary/90 text-sm"
+                  size="sm"
+                  className="text-primary hover:text-primary/90 text-xs"
+                  onClick={() => followMutation.mutate({ userId: user.id })}
+                  disabled={followMutation.isPending}
                 >
                   Follow
                 </Button>
               </div>
-            );
-          })}
+            ))
+          )}
         </div>
       </Card>
 
