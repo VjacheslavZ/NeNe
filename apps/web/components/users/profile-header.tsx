@@ -18,6 +18,7 @@ interface ProfileHeaderProps {
   onOpenFollowers: () => void;
   onOpenFollowing: () => void;
   isFollowLoading: boolean;
+  isOwnProfile: boolean;
 }
 export function ProfileHeader({
   profile,
@@ -26,6 +27,7 @@ export function ProfileHeader({
   onOpenFollowers,
   onOpenFollowing,
   isFollowLoading,
+  isOwnProfile,
 }: ProfileHeaderProps) {
   return (
     <div className="mb-8">
@@ -50,13 +52,16 @@ export function ProfileHeader({
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <h1 className="text-2xl font-normal">{profile.name}</h1>
             <div className="flex gap-2">
-              <Button
-                onClick={onFollowToggle}
-                disabled={isFollowLoading}
-                variant={profile.isFollowing ? 'outline' : 'default'}
-              >
-                {profile.isFollowing ? 'Following' : 'Follow'}
-              </Button>
+              {!isOwnProfile && (
+                <Button
+                  onClick={onFollowToggle}
+                  disabled={isFollowLoading}
+                  variant={profile.isFollowing ? 'outline' : 'default'}
+                >
+                  {profile.isFollowing ? 'Following' : 'Follow'}
+                </Button>
+              )}
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">

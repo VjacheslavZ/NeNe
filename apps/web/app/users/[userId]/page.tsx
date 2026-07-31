@@ -5,14 +5,17 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import { EditProfileModal } from '@/components/dashbord/edit-profile-modal';
+import FollowersFollowingModal from '@/components/users/followers-following-modal';
 import PostModal from '@/components/users/post-modal';
 import { ProfileHeader } from '@/components/users/profile-header';
 import { ProfileNavigation } from '@/components/users/profile-navigation';
 import { ProfileTabs } from '@/components/users/profile-tabs';
+import { authClient } from '@/lib/auth/client';
 import { trpc } from '@/lib/trpc/client';
 
 export default function ProfilePage() {
   const params = useParams();
+  const { data: session } = authClient.useSession();
   const userId = params.userId as string;
   const utils = trpc.useUtils();
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -93,6 +96,7 @@ export default function ProfilePage() {
       <ProfileNavigation />
       <div className="max-w-4xl mx-auto px-4 py-8">
         <ProfileHeader
+          isOwnProfile={session?.user.id === profile.id}
           profile={profile}
           onEditProfile={() => setIsEditProfileOpen(true)}
           onFollowToggle={handleFollowToggle}
@@ -121,12 +125,22 @@ export default function ProfilePage() {
           onOpenChange={setIsModalOpen}
         />
       )}
-
       <EditProfileModal
         open={isEditProfileOpen}
         onOpenChange={setIsEditProfileOpen}
         profile={profile}
         onSave={handleSaveProfile}
+      />
+      <FollowersFollowingModal
+        open={followersFollowingModal.open}
+        onOpenChange={(open) =>
+          setFollowersFollowingModal({
+            ...followersFollowingModal,
+            open,
+          })
+        }
+        userId={userId}
+        type={followersFollowingModal.type}
       />
     </div>
   );

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-export const userSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
+// export const userSchema = z.object({
+//   id: z.string(),
+//   name: z.string(),
+// });
 
 export const userIdSchema = z.object({
   userId: z.string(),
