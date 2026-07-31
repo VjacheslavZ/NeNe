@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreatePostInput, Post } from '@repo/trpc/schemas';
-import { desc } from 'drizzle-orm';
+import { desc, inArray } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { and, eq } from 'drizzle-orm/sql/expressions/conditions';
 
+import { follow } from '../auth/schema';
 import { UsersService } from '../auth/users/users.service';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import { schema } from '../database/database.module';
@@ -16,6 +17,15 @@ export class PostsService {
     private readonly database: NodePgDatabase<typeof schema>,
     private readonly usersService: UsersService,
   ) {}
+
+  private async getFollowedUserIds(userId: string) {
+    const following = await this.database
+      .select({ id: follow.followingId })
+      .from(follow)
+      .where(eq(follow.followerId, userId));
+
+    return [userId, ...following.map((f) => f.id)];
+  }
 
   async likePost(postId: number, userId: string) {
     const existingLike = await this.database.query.like.findFirst({
@@ -41,7 +51,9 @@ export class PostsService {
   async findAll(userId: string, postUserId?: string): Promise<Post[]> {
     const posts = await this.database.query.post.findMany({
       with: { user: true, likes: true, comments: true },
-      where: postUserId ? eq(post.userId, postUserId) : undefined,
+      where: postUserId
+        ? eq(post.userId, postUserId)
+        : inArray(post.userId, await this.getFollowedUserIds(userId)),
       orderBy: [desc(post.createdAt)],
     });
 
