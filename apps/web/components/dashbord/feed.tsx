@@ -3,6 +3,7 @@
 import { Post } from '@repo/trpc/schemas';
 import { Heart, MessageCircle, User } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import PostComments from '@/components/dashbord/post-comments';
@@ -23,6 +24,8 @@ export default function Feed({
   onAddComment,
   onDeleteComment,
 }: FeedProps) {
+  const router = useRouter();
+
   const [expandedComments, setExpandedComments] = useState<Set<number>>(
     new Set(),
   );
@@ -46,23 +49,29 @@ export default function Feed({
           <Card key={post.id} className="overflow-hidden">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center space-x-3">
-                {getImageUrl(post.user.avatar) ? (
-                  <Image
-                    src={getImageUrl(post.user.avatar)}
-                    alt={post.user.username}
-                    width={64}
-                    height={64}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                  </div>
-                )}
+                <Button
+                  variant="ghost"
+                  className="p-0"
+                  onClick={() => router.push(`/users/${post.user.id}`)}
+                >
+                  {getImageUrl(post.user.avatar) ? (
+                    <Image
+                      src={getImageUrl(post.user.avatar)}
+                      alt={post.user.username}
+                      width={64}
+                      height={64}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                  )}
 
-                <span className="font-semibold text-sm">
-                  {post.user.username}
-                </span>
+                  <span className="font-semibold text-sm">
+                    {post.user.username}
+                  </span>
+                </Button>
               </div>
             </div>
             <div className="aspect-square relative">
@@ -102,15 +111,26 @@ export default function Feed({
 
               <div className="text-sm font-semibold">{post.likes} likes</div>
               <div className="text-sm">
-                <span className="font-semibold">
-                  {post.user.username} {post.caption}
-                </span>
+                <Button
+                  variant="ghost"
+                  className="p-0 h-auto font-semibold hover:bg-transparent hover:opacity-80"
+                  onClick={() => router.push(`/users/${post.user.id}`)}
+                >
+                  <span className="font-semibold">
+                    {post.user.username} {post.caption}
+                  </span>
+                </Button>
               </div>
 
               {post.comments > 0 && (
-                <div className="text-sm text-muted-foreground">
-                  View all {post.comments} comments
-                </div>
+                <Button
+                  variant="ghost"
+                  className="p-0 h-auto text-sm text-muted-foreground hover:bg-transparent hover:opacity-80"
+                >
+                  <div className="text-sm text-muted-foreground">
+                    View all {post.comments} comments
+                  </div>
+                </Button>
               )}
 
               <div className="text-sm text-muted-foreground uppercase">

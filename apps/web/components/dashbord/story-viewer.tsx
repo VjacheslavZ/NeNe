@@ -1,6 +1,7 @@
 import { StoryGroup } from '@repo/trpc/schemas';
 import { ChevronLeftIcon, ChevronRightIcon, User, X } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,8 @@ export function StoryViewer({
   onOpenChange,
   initialGroupIndex,
 }: StoryViewerProps) {
+  const router = useRouter();
+
   const [currentGroupIndex, setCurrentGroupIndex] = useState(initialGroupIndex);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -107,7 +110,11 @@ export function StoryViewer({
           </div>
 
           <div className="absolute top-4 left-0 right-0 z-20 flex items-center justify-between px-4 pt-2">
-            <button className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <Button
+              variant="ghost"
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              onClick={() => router.push(`/users/${currentGroup.userId}`)}
+            >
               {currentGroup.avatar ? (
                 <Image
                   src={getImageUrl(currentGroup.avatar)}
@@ -126,7 +133,7 @@ export function StoryViewer({
                   {currentGroup.username}
                 </div>
               </div>
-            </button>
+            </Button>
 
             <div className="flex items-center gap-2">
               <Button

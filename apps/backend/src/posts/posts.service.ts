@@ -50,6 +50,7 @@ export class PostsService {
       user: {
         username: post.user.name,
         avatar: post.user.image || '',
+        id: post.user.id,
       },
       image: post.image,
       caption: post.caption,

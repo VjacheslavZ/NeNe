@@ -3,6 +3,7 @@
 import { Post } from '@repo/trpc/schemas';
 import { Heart, Trash2, User } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ export default function PostModal({
   open,
   onOpenChange,
 }: PostModalProps) {
+  const router = useRouter();
   const [commentText, setCommentText] = useState('');
 
   const utils = trpc.useUtils();
@@ -95,6 +97,7 @@ export default function PostModal({
             <div className="flex items-center justify-between p-4 border-b">
               <Button
                 variant="ghost"
+                onClick={() => router.push(`/users/${post.user.id}`)}
                 className="flex items-center space-x-3 h-auto p-0"
               >
                 {post.user.avatar ? (
@@ -118,6 +121,7 @@ export default function PostModal({
               <div className="flex space-x-3 mb-4">
                 <Button
                   variant="ghost"
+                  onClick={() => router.push(`/users/${post.user.id}`)}
                   className="flex-shrink-0 p-0 h-auto hover:opacity-80 hover:bg-transparent"
                 >
                   {post.user.avatar ? (
@@ -141,6 +145,7 @@ export default function PostModal({
                       <Button
                         variant="ghost"
                         className="font-semibold mr-2 p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                        onClick={() => router.push(`/users/${post.user.id}`)}
                       >
                         {post.user.username}
                       </Button>
@@ -159,6 +164,7 @@ export default function PostModal({
                     <Button
                       variant="ghost"
                       className="shrink-0 p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                      onClick={() => router.push(`/users/${comment.user.id}`)}
                     >
                       {getImageUrl(comment.user.avatar) ? (
                         <Image
@@ -180,6 +186,9 @@ export default function PostModal({
                           <Button
                             variant="ghost"
                             className="font-semibold text-sm p-0 h-auto hover:opacity-80 hover:bg-transparent"
+                            onClick={() =>
+                              router.push(`/users/${comment.user.id}`)
+                            }
                           >
                             {comment.user.username}
                           </Button>

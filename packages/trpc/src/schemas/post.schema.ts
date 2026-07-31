@@ -16,6 +16,7 @@ export const postSchema = z.object({
   user: z.object({
     username: z.string(),
     avatar: z.string(),
+    id: z.string(),
   }),
   image: z.string(),
   caption: z.string(),
