@@ -44,3 +44,29 @@ export const likeRelations = relations(like, ({ one }) => ({
     references: [post.id],
   }),
 }));
+
+export const savedPost = pgTable('saved_posts', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  postId: integer('post_id')
+    .notNull()
+    .references(() => post.id, {
+      onDelete: 'cascade',
+    }),
+  createdAt: timestamp('created_at')
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const savedPostsRelations = relations(savedPost, ({ one }) => ({
+  user: one(user, {
+    fields: [savedPost.userId],
+    references: [user.id],
+  }),
+  post: one(post, {
+    fields: [savedPost.postId],
+    references: [post.id],
+  }),
+}));

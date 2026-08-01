@@ -1,7 +1,7 @@
 'use client';
 
 import { Post } from '@repo/trpc/schemas';
-import { Heart, Trash2, User } from 'lucide-react';
+import { Bookmark, Heart, Trash2, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -67,6 +67,18 @@ export default function PostModal({
       setCommentText('');
     },
   });
+
+  const savePostMutation = trpc.postsRouter.savePost.useMutation({
+    onSuccess: () => {
+      utils.postsRouter.findAll.invalidate();
+      utils.postsRouter.getSavedPosts.invalidate();
+    },
+  });
+
+  const handleSave = async () => {
+    await savePostMutation.mutateAsync({ postId: post.id });
+  };
+
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
@@ -234,11 +246,23 @@ export default function PostModal({
                       className={`h-6 w-6 ${post.isLiked ? 'fill-red-500 text-red-500' : ''}`}
                     />
                   </Button>
+
+                  <div className="font-semibold text-sm">
+                    {post.likes} Likes
+                  </div>
                 </div>
 
-                <div className="font-semibold text-sm mb-3">
-                  {post.likes} Likes
-                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleSave}
+                  disabled={savePostMutation.isPending}
+                  className="p-0 h-auto"
+                >
+                  <Bookmark
+                    className={`h-6 w-6 ${post.isSaved ? 'fill-foreground' : ''}`}
+                  />
+                </Button>
               </div>
 
               <div className="border-t p-4">

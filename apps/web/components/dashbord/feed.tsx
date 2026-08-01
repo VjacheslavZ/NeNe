@@ -1,7 +1,7 @@
 'use client';
 
 import { Post } from '@repo/trpc/schemas';
-import { Heart, MessageCircle, User } from 'lucide-react';
+import { Bookmark, Heart, MessageCircle, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ interface FeedProps {
   onLikePost: (postID: number) => void;
   onAddComment: (postID: number, text: string) => void;
   onDeleteComment: (commentId: number) => void;
+  onSavePost: (postID: number) => void;
 }
 
 export default function Feed({
@@ -23,6 +24,7 @@ export default function Feed({
   onLikePost,
   onAddComment,
   onDeleteComment,
+  onSavePost,
 }: FeedProps) {
   const router = useRouter();
 
@@ -107,6 +109,16 @@ export default function Feed({
                     />
                   </Button>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onSavePost(post.id)}
+                  className="p-0 h-auto"
+                >
+                  <Bookmark
+                    className={`w-6 h-6 ${post.isSaved ? 'fill-foreground' : ''}`}
+                  />
+                </Button>
               </div>
 
               <div className="text-sm font-semibold">{post.likes} likes</div>

@@ -57,6 +57,13 @@
       "when": 1784896026700,
       "tag": "0007_heavy_luminals",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1785579937109,
+      "tag": "0008_conscious_silverclaw",
+      "breakpoints": true
     }
   ]
 }

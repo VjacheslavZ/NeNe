@@ -8,7 +8,7 @@ import { follow } from '../auth/schema';
 import { UsersService } from '../auth/users/users.service';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import { schema } from '../database/database.module';
-import { like, post } from './schemas/schema';
+import { like, post, savedPost } from './schemas/schema';
 
 @Injectable()
 export class PostsService {
@@ -57,6 +57,8 @@ export class PostsService {
       orderBy: [desc(post.createdAt)],
     });
 
+    const savedPosts = await this.getSavedPosts(userId);
+
     return posts.map((post) => ({
       id: post.id,
       user: {
@@ -70,6 +72,56 @@ export class PostsService {
       timestamp: post.createdAt.toISOString(),
       comments: post.comments.length,
       isLiked: post.likes.some((like) => like.userId === userId),
+      isSaved: savedPosts.map((sp) => sp.id).includes(post.id),
+    }));
+  }
+
+  async savePost(postId: number, userId: string) {
+    const existingSave = await this.database.query.savedPost.findFirst({
+      where: and(eq(savedPost.postId, postId), eq(savedPost.userId, userId)),
+    });
+
+    if (existingSave) {
+      await this.database
+        .delete(savedPost)
+        .where(eq(savedPost.id, existingSave.id));
+    } else {
+      await this.database
+        .insert(savedPost)
+        .values({ postId, userId, createdAt: new Date() });
+    }
+  }
+
+  async getSavedPosts(userId: string): Promise<Post[]> {
+    const savedPosts = await this.database.query.savedPost.findMany({
+      where: eq(savedPost.userId, userId),
+      with: {
+        post: {
+          with: {
+            user: true,
+            likes: true,
+            comments: true,
+          },
+        },
+      },
+      orderBy: [desc(savedPost.createdAt)],
+    });
+
+    return savedPosts.map((sp) => ({
+      id: sp.post.id,
+      user: {
+        username: sp.post.user.name,
+        name: sp.post.user.name,
+        avatar: sp.post.user.image || '',
+        id: sp.post.user.id,
+      },
+      image: sp.post.image,
+      caption: sp.post.caption,
+      likes: sp.post.likes.length,
+      timestamp: sp.post.createdAt.toISOString(),
+      comments: sp.post.comments.length,
+      isLiked: sp.post.likes.some((like) => like.userId === userId),
+      isSaved: true,
     }));
   }
 }
