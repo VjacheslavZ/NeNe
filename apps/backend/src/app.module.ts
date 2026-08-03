@@ -15,8 +15,8 @@ import { CommentsModule } from './comments/comments.module';
 import { DATABASE_CONNECTION } from './database/database-connection';
 import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
-import { UploadModule } from './upload/upload.module';
 import { StoriesModule } from './stories/stories.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -33,7 +33,9 @@ import { StoriesModule } from './stories/stories.module';
         auth: betterAuth({
           database: drizzleAdapter(db, { provider: 'pg' }),
           emailAndPassword: { enabled: true },
-          trustedOrigins: [configService.getOrThrow('UI_URL')],
+          trustedOrigins: configService.get('UI_URL')
+            ? [configService.get('UI_URL') as string]
+            : undefined,
         }),
       }),
       inject: [DATABASE_CONNECTION, ConfigService],
