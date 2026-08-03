@@ -1,0 +1,1 @@
+web: npx drizzle-kit migrate --config=dist/drizzle.config.ts && node dist/src/main.js
