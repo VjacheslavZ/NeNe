@@ -29,7 +29,7 @@ export const schema = {
         if (configService.get('NODE_ENV') === 'production') {
           const certPath = path.resolve(__dirname, '../../global-bundle.pem');
           const certificate = fs.readFileSync(certPath).toString();
-          ssl = { sa: certificate };
+          ssl = { ca: certificate };
         }
 
         const pool = new Pool({
