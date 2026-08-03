@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: 25.6.1
     commands:
       - echo Installing dependencies with pnpm...
       - npm install -g pnpm@11.16.0
