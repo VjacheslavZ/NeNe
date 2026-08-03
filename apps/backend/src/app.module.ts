@@ -25,7 +25,10 @@ import { UploadModule } from './upload/upload.module';
     TRPCModule.forRoot({
       basePath: '/api/trpc',
       context: AppContext,
-      autoSchemaFile: '../../packages/trpc/src/server',
+      autoSchemaFile:
+        process.env.NODE_ENV !== 'production'
+          ? '../../packages/trpc/src/server'
+          : undefined,
     }),
     AuthModule.forRootAsync({
       imports: [DatabaseModule, ConfigModule],
