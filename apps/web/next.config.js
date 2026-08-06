@@ -1,13 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@repo/trpc'],
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        source: '/api/:path*',
         destination: `${process.env.API_URL}/api/:path*`,
       },
       {
-        source: "/uploads/:path*",
+        source: '/uploads/:path*',
         destination: `${process.env.API_URL}/uploads/:path*`,
       },
     ];
@@ -15,8 +16,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
       // {
       //   protocol: process.env.BACKEND_PROTOCOL,
