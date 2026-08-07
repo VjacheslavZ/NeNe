@@ -19,10 +19,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
-      // {
-      //   protocol: process.env.BACKEND_PROTOCOL,
-      //   hostname: process.env.BACKEND_HOST,
-      // },
+      {
+        protocol: process.env.BACKEND_PROTOCOL,
+        hostname: process.env.BACKEND_HOST,
+      },
+      {
+        protocol: 'https',
+        hostname: process.env.NEXT_PUBLIC_STORAGE_URL,
+      },
     ],
   },
 };

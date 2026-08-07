@@ -3,18 +3,15 @@ import { extname } from 'path';
 import { BadRequestException } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { Request } from 'express';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { v4 as uuid4 } from 'uuid';
 
-export const editFileName = (
-  request: Request,
-  file: Express.Multer.File,
-  callback: any,
-) => {
+export const generateFilename = (file: Express.Multer.File) => {
   const name = file.originalname.split('.')[0];
-  const fileExtName = extname(file.originalname);
   const randomName = uuid4();
-  callback(null, `${name}-${Date.now()}-${randomName}${fileExtName}`);
+  const fileExtName = extname(file.originalname);
+
+  return `${name}-${Date.now()}-${randomName}${fileExtName}`;
 };
 
 const imageFileFilter = (
@@ -32,10 +29,7 @@ const imageFileFilter = (
 };
 
 export const multerConfig: MulterOptions = {
-  storage: diskStorage({
-    destination: './uploads/images',
-    filename: editFileName,
-  }),
+  storage: memoryStorage(),
   fileFilter: imageFileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
 };
