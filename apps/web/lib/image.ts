@@ -1,6 +1,8 @@
 export const getImageUrl = (image: string | null) => {
   if (!image) return '';
 
-  const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL || `/uploads/images`;
-  return `${storageUrl}/${image}`;
+  const storageHost = process.env.NEXT_PUBLIC_STORAGE_URL;
+  if (!storageHost) return `/uploads/images/${image}`;
+
+  return `https://${storageHost}/images/${image}`;
 };
